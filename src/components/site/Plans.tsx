@@ -40,8 +40,8 @@ export const PLANS: Plan[] = [
     options: [
       {
         price: 299.9,
-        label: "1 aula presencial por semana",
-        sub: "4 dias de treino guiado por aplicativo",
+        label: "1 aula presencial por semana (4 aulas/mês)",
+        sub: "4 dias de treino guiado por aplicativo (16 treinos/mês)",
         suffix: "/mês",
         message: "Olá, Simone! Gostaria de saber mais sobre o plano Híbrido.",
         aria: "Consultar plano híbrido",
