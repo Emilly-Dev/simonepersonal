@@ -1,26 +1,64 @@
 import { formatBRL, whatsappLink } from "@/lib/contact";
 
-export const PLANS = [
+type PlanOption = {
+  price: number;
+  label?: string;
+  sub?: string;
+  suffix?: string;
+  message?: string;
+  aria?: string;
+};
+
+type Plan = {
+  name: string;
+  key: string;
+  options: PlanOption[];
+};
+
+export const PLANS: Plan[] = [
   {
     name: "Mensal",
     key: "mensal",
     options: [
-      { perWeek: 2, perMonth: 8, price: 549.9 },
-      { perWeek: 3, perMonth: 12, price: 699.9 },
+      { price: 549.9, perWeek: 2, perMonth: 8 },
+      { price: 699.9, perWeek: 3, perMonth: 12 },
     ],
   },
   {
     name: "Trimestral",
     key: "trimestral",
     options: [
-      { perWeek: 2, perMonth: 8, price: 649.9 },
-      { perWeek: 3, perMonth: 12, price: 599.9 },
+      { price: 649.9, perWeek: 2, perMonth: 8 },
+      { price: 599.9, perWeek: 3, perMonth: 12 },
+    ],
+  },
+  {
+    name: "Híbrido",
+    key: "híbrido",
+    options: [
+      {
+        price: 299.9,
+        label: "1 aula presencial por semana",
+        sub: "4 dias de treino guiado por aplicativo",
+        suffix: "/mês",
+        message: "Olá, Simone! Gostaria de saber mais sobre o plano Híbrido.",
+        aria: "Consultar plano híbrido",
+      },
     ],
   },
 ];
 
 export function planMessage(plan: string, perWeek: number) {
-  return `Olá, Simone! Gostaria de saber mais sobre o plano ${plan} com ${perWeek} treinos por semana.`;
+  const noun = perWeek === 1 ? "treino" : "treinos";
+  return `Olá, Simone! Gostaria de saber mais sobre o plano ${plan} com ${perWeek} ${noun} por semana.`;
+}
+
+function optionLabel(o: PlanOption & { perWeek?: number; perMonth?: number }) {
+  return o.label ?? `${o.perWeek} vezes por semana`;
+}
+
+function optionSub(o: PlanOption & { perWeek?: number; perMonth?: number }) {
+  return o.sub ?? `${o.perMonth} aulas por mês`;
 }
 
 export function Plans() {
@@ -36,28 +74,43 @@ export function Plans() {
             Confira as opções de acompanhamento e entre em contato para conversar sobre o plano.
           </p>
         </div>
-        <div className="mt-14 grid gap-6 md:grid-cols-2">
+        <div className="mt-14 grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
           {PLANS.map((plan) => (
-            <article key={plan.key} className="rounded-3xl border border-border bg-card p-6 md:p-9">
+            <article
+              key={plan.key}
+              className="flex h-full flex-col rounded-3xl border border-border bg-card p-6 md:p-7 xl:p-9"
+            >
               <header className="flex items-baseline justify-between border-b border-border pb-5">
-                <h3 className="font-serif text-3xl text-foreground">Plano {plan.name}</h3>
+                <h3 className="font-serif text-2xl text-foreground md:text-3xl">Plano {plan.name}</h3>
               </header>
-              <ul className="divide-y divide-border">
+              <ul className="flex flex-1 flex-col divide-y divide-border">
                 {plan.options.map((o) => (
-                  <li key={o.perWeek} className="py-7">
+                  <li key={o.price} className="flex flex-1 flex-col py-7">
                     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
                       <div className="min-w-0">
-                        <p className="font-semibold text-foreground">{o.perWeek} vezes por semana</p>
-                        <p className="mt-1 text-sm text-muted-foreground">{o.perMonth} aulas por mês</p>
+                        <p className="font-semibold text-foreground">{optionLabel(o)}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">{optionSub(o)}</p>
                       </div>
-                      <p className="whitespace-nowrap font-serif text-3xl text-foreground md:text-4xl">{formatBRL(o.price)}</p>
+                      <p className="whitespace-nowrap font-serif text-3xl text-foreground md:text-4xl">
+                        {formatBRL(o.price)}
+                        {o.suffix ? (
+                          <span className="ml-1 align-middle font-sans text-sm font-medium text-muted-foreground">
+                            {o.suffix}
+                          </span>
+                        ) : null}
+                      </p>
                     </div>
                     <a
-                      href={whatsappLink(planMessage(plan.key, o.perWeek))}
+                      href={whatsappLink(
+                        o.message ?? planMessage(plan.key, (o as { perWeek: number }).perWeek)
+                      )}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-outline mt-5 h-11 w-full text-sm"
-                      aria-label={`Consultar plano ${plan.key}, ${o.perWeek} vezes por semana`}
+                      className="btn-outline mt-5 h-11 w-full text-sm md:mt-auto md:pt-0"
+                      aria-label={
+                        o.aria ??
+                        `Consultar plano ${plan.key}, ${(o as { perWeek: number }).perWeek} vezes por semana`
+                      }
                     >
                       Consultar este plano
                     </a>
