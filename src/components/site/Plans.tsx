@@ -96,12 +96,25 @@ export function Plans() {
               <ul className="flex flex-1 flex-col divide-y divide-border">
                 {plan.options.map((o) => (
                   <li key={o.price} className="flex flex-1 flex-col py-7">
-                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
-                      <div className="min-w-0">
-                        <p className="font-semibold text-foreground">{optionLabel(o)}</p>
-                        <p className="mt-1 text-sm text-muted-foreground">{optionSub(o)}</p>
+                    {o.label ? (
+                      <div>
+                        <p className="font-semibold text-foreground">{o.label}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">{o.sub}</p>
                       </div>
-                      <p className="whitespace-nowrap font-serif text-3xl text-foreground md:text-4xl">
+                    ) : (
+                      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-foreground">{optionLabel(o)}</p>
+                          <p className="mt-1 text-sm text-muted-foreground">{optionSub(o)}</p>
+                        </div>
+                        <p className="whitespace-nowrap font-serif text-3xl text-foreground md:text-4xl">
+                          {formatBRL(o.price)}
+                        </p>
+                      </div>
+                    )}
+                    <div aria-hidden className="hidden md:block md:flex-1" />
+                    {o.label ? (
+                      <p className="mt-6 whitespace-nowrap font-serif text-3xl text-foreground md:text-4xl">
                         {formatBRL(o.price)}
                         {o.suffix ? (
                           <span className="ml-1 align-middle font-sans text-sm font-medium text-muted-foreground">
@@ -109,8 +122,8 @@ export function Plans() {
                           </span>
                         ) : null}
                       </p>
-                    </div>
-                    <div aria-hidden className="hidden md:block md:flex-1" />
+                    ) : null}
+
                     <a
                       href={whatsappLink(optionMessage(o, plan))}
                       target="_blank"
