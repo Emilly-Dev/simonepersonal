@@ -2,6 +2,8 @@ import { formatBRL, whatsappLink } from "@/lib/contact";
 
 type PlanOption = {
   price: number;
+  perWeek?: number;
+  perMonth?: number;
   label?: string;
   sub?: string;
   suffix?: string;
@@ -53,12 +55,20 @@ export function planMessage(plan: string, perWeek: number) {
   return `Olá, Simone! Gostaria de saber mais sobre o plano ${plan} com ${perWeek} ${noun} por semana.`;
 }
 
-function optionLabel(o: PlanOption & { perWeek?: number; perMonth?: number }) {
+function optionLabel(o: PlanOption) {
   return o.label ?? `${o.perWeek} vezes por semana`;
 }
 
-function optionSub(o: PlanOption & { perWeek?: number; perMonth?: number }) {
+function optionSub(o: PlanOption) {
   return o.sub ?? `${o.perMonth} aulas por mês`;
+}
+
+function optionMessage(o: PlanOption, plan: Plan) {
+  return o.message ?? planMessage(plan.key, o.perWeek ?? 0);
+}
+
+function optionAria(o: PlanOption, plan: Plan) {
+  return o.aria ?? `Consultar plano ${plan.key}, ${o.perWeek} vezes por semana`;
 }
 
 export function Plans() {
@@ -80,7 +90,7 @@ export function Plans() {
               key={plan.key}
               className="flex h-full flex-col rounded-3xl border border-border bg-card p-6 md:p-7 xl:p-9"
             >
-              <header className="flex items-baseline justify-between border-b border-border pb-5">
+              <header className="border-b border-border pb-5">
                 <h3 className="font-serif text-2xl text-foreground md:text-3xl">Plano {plan.name}</h3>
               </header>
               <ul className="flex flex-1 flex-col divide-y divide-border">
@@ -100,17 +110,13 @@ export function Plans() {
                         ) : null}
                       </p>
                     </div>
+                    <div aria-hidden className="hidden md:block md:flex-1" />
                     <a
-                      href={whatsappLink(
-                        o.message ?? planMessage(plan.key, (o as { perWeek: number }).perWeek)
-                      )}
+                      href={whatsappLink(optionMessage(o, plan))}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-outline mt-5 h-11 w-full text-sm md:mt-auto md:pt-0"
-                      aria-label={
-                        o.aria ??
-                        `Consultar plano ${plan.key}, ${(o as { perWeek: number }).perWeek} vezes por semana`
-                      }
+                      className="btn-outline mt-5 h-11 w-full text-sm"
+                      aria-label={optionAria(o, plan)}
                     >
                       Consultar este plano
                     </a>
