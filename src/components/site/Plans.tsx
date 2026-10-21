@@ -5,16 +5,16 @@ export const PLANS = [
     name: "Mensal",
     key: "mensal",
     options: [
-      { perWeek: 2, perMonth: 8, price: 500 },
-      { perWeek: 3, perMonth: 12, price: 600 },
+      { perWeek: 2, perMonth: 8, price: 549.9 },
+      { perWeek: 3, perMonth: 12, price: 699.9 },
     ],
   },
   {
     name: "Trimestral",
     key: "trimestral",
     options: [
-      { perWeek: 2, perMonth: 8, price: 475 },
-      { perWeek: 3, perMonth: 12, price: 575 },
+      { perWeek: 2, perMonth: 8, price: 649.9 },
+      { perWeek: 3, perMonth: 12, price: 599.9 },
     ],
   },
 ];
