@@ -1,4 +1,3 @@
-import photo from "@/assets/simone-machado.jpg.asset.json";
 import { WHATSAPP_URL } from "@/lib/contact";
 
 export function Hero() {
@@ -24,7 +23,7 @@ export function Hero() {
           <div aria-hidden className="absolute -right-4 -top-4 h-full w-full rounded-[2rem] bg-blush md:-right-6 md:-top-6" />
           <figure className="relative overflow-hidden rounded-[2rem] bg-nude">
             <img
-              src={photo.url}
+              src="/simone-machado.jpg"
               alt="Simone Machado, personal trainer, sorrindo"
               className="aspect-[4/5] w-full object-cover object-[60%_30%]"
               width={1080}
